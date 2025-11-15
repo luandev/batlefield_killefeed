@@ -12,6 +12,9 @@ Tool to scan Battlefield 6 (2042) recordings, detect killfeed white boxes, and b
 - **Folder Watching**: Automatically process new videos as they're added
 - **Export Formats**: CSV and JSON output with full detection data
 - **Video Clipping**: Extract highlight clips around detected events
+- **Event Visualizer**: View events timeline, statistics, and visualize on video with overlays
+- **Interactive ROI Selector**: Visually set the killfeed detection region with click-and-drag interface
+- **Terminal UI**: Browse videos in default folder with processing status indicators
 
 ## Installation
 
@@ -24,7 +27,40 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Edit `config.json` to adjust detection parameters:
+### Setting ROI (Region of Interest)
+
+The easiest way to set the ROI is using the interactive selector:
+
+```bash
+python main.py set-roi "path/to/video.mp4"
+```
+
+Start from a specific frame (useful if killfeed appears later in video):
+
+```bash
+python main.py set-roi "path/to/video.mp4" --frame 1000
+```
+
+**Interactive Controls:**
+- **Click and drag** to select the killfeed region
+- **'n'** - Next frame (hold to speed up logarithmically)
+- **'p'** - Previous frame (hold to speed up logarithmically)
+- **'r'** - Reset selection
+- **'s'** - Save and exit
+- **'q'** or **ESC** - Cancel
+
+**Speed Control:** When holding 'n' or 'p', the frame skip speed increases logarithmically:
+- Short press: 1 frame at a time
+- Hold 0.5s: ~2 frames per update
+- Hold 1s: ~3 frames per update
+- Hold 2s: ~4 frames per update
+- And so on (capped at 1000 frames per update)
+
+The current speed multiplier is displayed in the frame info.
+
+The ROI will be automatically saved to `config.json` as **percentages (resolution-independent)**. This means the same ROI will work across different video resolutions (1080p, 1440p, 4K, etc.) without needing to be reconfigured.
+
+Alternatively, edit `config.json` manually:
 
 - **ROI Settings**: Adjust `roi_x_percent`, `roi_y_percent`, `roi_width_percent`, `roi_height_percent` for killfeed position
 - **Detection Thresholds**: Modify `brightness_threshold`, `min_area`, `max_area` for sensitivity
@@ -37,9 +73,31 @@ Edit `config.json` to adjust detection parameters:
 The default configuration is set for Battlefield 6 (2042) killfeed:
 - Position: Bottom-left, lower-left from center
 - Boxes stack horizontally, pushing left as new ones appear
-- ROI: x=0.0-35%, y=65-90% of screen
+- ROI: x=0.0-35%, y=65-90% of screen (percentages are resolution-independent)
+
+**Important:** ROI is stored as percentages relative to video dimensions, so the same configuration works for any video resolution. If you set ROI on a 1440p video, it will automatically work for 1080p, 4K, or any other resolution.
 
 ## Usage
+
+### Browse Videos (Terminal UI)
+
+List all videos in the default folder with processing status:
+
+```bash
+python main.py browse
+```
+
+This displays:
+- All video files in `D:\Videos\NVIDIA\Battlefield 6` (or folder from config)
+- File sizes
+- Processing status (✓ Processed, ~ Partial, ○ Pending)
+- File sizes in MB
+
+Use a custom folder:
+
+```bash
+python main.py browse --folder "path/to/videos"
+```
 
 ### Analyze a Single Video
 
@@ -99,6 +157,39 @@ Or enable in `config.json`:
 - Clustered events: `{video_id}_{index}_{tag}x{count}_{timestamp}.mp4`
 
 Clips are saved to `output/clips/` directory.
+
+### Visualize Detected Events
+
+View detected events from a JSON file:
+
+```bash
+python -m src.cli visualize "output/video_events.json"
+```
+
+Show events on video with overlays:
+
+```bash
+python -m src.cli visualize "output/video_events.json" --video "path/to/video.mp4"
+```
+
+Show specific event details:
+
+```bash
+python -m src.cli visualize "output/video_events.json" --details 1
+```
+
+Show specific event on video:
+
+```bash
+python -m src.cli visualize "output/video_events.json" --video "video.mp4" --event 1
+```
+
+**Visualizer Features:**
+- Summary statistics (total events, duration, breakdown by tag)
+- Visual timeline showing event positions
+- Detailed events table with timestamps and confidence
+- Video playback with event overlays (when `--video` is provided)
+- Keyboard controls: `q` to quit, `n` for next event, `p` for previous, `space` to pause
 
 ### Custom Config File
 

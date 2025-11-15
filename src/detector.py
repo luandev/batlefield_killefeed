@@ -98,6 +98,9 @@ class KillfeedDetector:
         """
         Crop the region of interest (bottom-left killfeed area).
         
+        Uses percentage-based ROI coordinates, making it resolution-independent.
+        The same ROI percentages work for any video resolution (1080p, 1440p, 4K, etc.).
+        
         Args:
             frame: Input frame
             
@@ -106,6 +109,8 @@ class KillfeedDetector:
         """
         h, w = frame.shape[:2]
         
+        # Convert percentage-based ROI to pixel coordinates for current frame resolution
+        # This makes the ROI resolution-independent - same percentages work for any resolution
         roi_x = int(self.detection_config.get("roi_x_percent", 0.0) * w)
         roi_y = int(self.detection_config.get("roi_y_percent", 0.65) * h)
         roi_width = int(self.detection_config.get("roi_width_percent", 0.35) * w)

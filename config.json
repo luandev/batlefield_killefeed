@@ -1,10 +1,10 @@
 {
   "detection": {
     "sample_fps": 3.0,
-    "roi_x_percent": 0.0,
-    "roi_y_percent": 0.65,
-    "roi_width_percent": 0.35,
-    "roi_height_percent": 0.25,
+    "roi_x_percent": 0.13515625,
+    "roi_y_percent": 0.5569444444444445,
+    "roi_width_percent": 0.29921875,
+    "roi_height_percent": 0.21805555555555556,
     "brightness_threshold": 200,
     "min_area": 100,
     "max_area": 5000,
@@ -13,7 +13,16 @@
     "morph_kernel_size": 3,
     "use_morphology": true,
     "grouping_delta_t": 0.8,
-    "min_boxes_for_multikill": 3
+    "min_boxes_for_multikill": 3,
+    "roi_pixels_reference": {
+      "x": 346,
+      "y": 802,
+      "width": 766,
+      "height": 314,
+      "video_width": 2560,
+      "video_height": 1440,
+      "note": "Reference only - detector uses percentages above"
+    }
   },
   "export": {
     "export_csv": true,
@@ -28,10 +37,13 @@
     "cluster_threshold_seconds": 5.0,
     "min_confidence": 0.5,
     "min_box_count": 1,
-    "allowed_tags": ["MULTI_KILL", "KILL"],
+    "allowed_tags": [
+      "MULTI_KILL",
+      "KILL"
+    ],
     "max_clips": null
   },
-  "watch_folder": "",
+  "watch_folder": "D:\\Videos\\NVIDIA\\Battlefield 6",
   "output_folder": "output",
   "verbosity": {
     "log_level": "INFO",
@@ -48,5 +60,11 @@
     "OBJECTIVE_KILL",
     "UNKNOWN"
   ],
-  "video_extensions": [".mp4", ".mkv", ".avi", ".mov", ".DVR.mp4"]
+  "video_extensions": [
+    ".mp4",
+    ".mkv",
+    ".avi",
+    ".mov",
+    ".DVR.mp4"
+  ]
 }

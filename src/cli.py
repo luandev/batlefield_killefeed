@@ -17,6 +17,22 @@ def cli():
 
 
 @cli.command()
+@click.option("--folder", "-f", type=click.Path(exists=True, path_type=Path), help="Video folder path (default: from config or D:\\Videos\\NVIDIA\\Battlefield 6)")
+def browse(folder: Optional[Path]):
+    """
+    Browse and list videos in the default folder with interactive terminal UI.
+    """
+    from src.tui import VideoBrowser
+    
+    browser = VideoBrowser(default_folder=folder)
+    videos = browser.simple_list()
+    
+    if videos:
+        console = Console()
+        console.print("\n[dim]Use 'python main.py analyze <video_path>' to process a video[/dim]")
+
+
+@cli.command()
 @click.argument("video_path", type=click.Path(exists=True, path_type=Path))
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
 @click.option("--config", "-c", type=click.Path(exists=True, path_type=Path), help="Path to config file")
@@ -108,6 +124,74 @@ def watch(folder_path: Path, verbose: bool, config: Optional[Path]):
     except KeyboardInterrupt:
         console.print("\n[yellow]Stopping watcher...[/yellow]")
         watcher.stop()
+
+
+@cli.command()
+@click.argument("json_path", type=click.Path(exists=True, path_type=Path))
+@click.option("--video", "-v", type=click.Path(exists=True, path_type=Path), help="Path to source video for visualization")
+@click.option("--event", "-e", type=int, help="Show specific event number (1-based)")
+@click.option("--limit", "-l", type=int, help="Limit number of events shown in table")
+@click.option("--details", "-d", type=int, help="Show detailed information for specific event")
+def visualize(json_path: Path, video: Optional[Path], event: Optional[int], limit: Optional[int], details: Optional[int]):
+    """
+    Visualize detected events from JSON file.
+    
+    JSON_PATH: Path to the events JSON file
+    """
+    from src.visualizer import EventVisualizer
+    
+    visualizer = EventVisualizer()
+    
+    if not visualizer.load_json(json_path):
+        return
+    
+    # Display summary
+    visualizer.display_summary()
+    
+    # Display timeline
+    visualizer.display_timeline()
+    
+    # Display events table
+    visualizer.display_events_table(limit=limit)
+    
+    # Show event details if requested
+    if details:
+        visualizer.display_event_details(details)
+    
+    # Visualize video if provided
+    if video:
+        visualizer.visualize_video(video, event_index=event)
+    elif event:
+        console = Console()
+        console.print("[yellow]Use --video to visualize events on video[/yellow]")
+
+
+@cli.command()
+@click.argument("video_path", type=click.Path(exists=True, path_type=Path))
+@click.option("--frame", "-f", type=int, default=0, help="Frame number to use for ROI selection (default: 0)")
+@click.option("--config", "-c", type=click.Path(path_type=Path), help="Path to config file (default: config.json)")
+def set_roi(video_path: Path, frame: int, config: Optional[Path]):
+    """
+    Interactively set the ROI (Region of Interest) for killfeed detection.
+    
+    VIDEO_PATH: Path to video file to use for ROI selection
+    """
+    from src.roi_selector import ROISelector
+    
+    if config is None:
+        config = Path("config.json")
+    
+    selector = ROISelector()
+    
+    # Select ROI
+    roi = selector.select_roi(video_path, frame)
+    
+    if roi:
+        # Save to config
+        selector.save_roi_to_config(roi, video_path, config)
+    else:
+        console = Console()
+        console.print("[yellow]ROI selection cancelled or failed[/yellow]")
 
 
 if __name__ == "__main__":
