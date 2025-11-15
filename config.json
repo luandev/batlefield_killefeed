@@ -1,10 +1,10 @@
 {
   "detection": {
     "sample_fps": 3.0,
-    "roi_x_percent": 0.13515625,
-    "roi_y_percent": 0.5569444444444445,
-    "roi_width_percent": 0.29921875,
-    "roi_height_percent": 0.21805555555555556,
+    "roi_x_percent": 0.09453125,
+    "roi_y_percent": 0.6236111111111111,
+    "roi_width_percent": 0.328125,
+    "roi_height_percent": 0.07361111111111111,
     "brightness_threshold": 200,
     "min_area": 100,
     "max_area": 5000,
@@ -15,12 +15,12 @@
     "grouping_delta_t": 0.8,
     "min_boxes_for_multikill": 3,
     "roi_pixels_reference": {
-      "x": 346,
-      "y": 802,
-      "width": 766,
-      "height": 314,
-      "video_width": 2560,
-      "video_height": 1440,
+      "x": 121,
+      "y": 449,
+      "width": 420,
+      "height": 53,
+      "video_width": 1280,
+      "video_height": 720,
       "note": "Reference only - detector uses percentages above"
     }
   },
