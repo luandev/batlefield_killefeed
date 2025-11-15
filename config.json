@@ -1,0 +1,52 @@
+{
+  "detection": {
+    "sample_fps": 3.0,
+    "roi_x_percent": 0.0,
+    "roi_y_percent": 0.65,
+    "roi_width_percent": 0.35,
+    "roi_height_percent": 0.25,
+    "brightness_threshold": 200,
+    "min_area": 100,
+    "max_area": 5000,
+    "aspect_ratio_min": 0.3,
+    "aspect_ratio_max": 3.0,
+    "morph_kernel_size": 3,
+    "use_morphology": true,
+    "grouping_delta_t": 0.8,
+    "min_boxes_for_multikill": 3
+  },
+  "export": {
+    "export_csv": true,
+    "export_json": true,
+    "export_ground_truth": true,
+    "output_dir": "output"
+  },
+  "clipping": {
+    "enabled": false,
+    "pre_padding_seconds": 2.0,
+    "post_padding_seconds": 2.0,
+    "cluster_threshold_seconds": 5.0,
+    "min_confidence": 0.5,
+    "min_box_count": 1,
+    "allowed_tags": ["MULTI_KILL", "KILL"],
+    "max_clips": null
+  },
+  "watch_folder": "",
+  "output_folder": "output",
+  "verbosity": {
+    "log_level": "INFO",
+    "show_detection_stats": false,
+    "show_memory_usage": true
+  },
+  "event_tags": [
+    "KILL",
+    "HEADSHOT",
+    "MULTI_KILL",
+    "KILL_ASSIST",
+    "SUPPRESSION_ASSIST",
+    "VEHICLE_KILL",
+    "OBJECTIVE_KILL",
+    "UNKNOWN"
+  ],
+  "video_extensions": [".mp4", ".mkv", ".avi", ".mov", ".DVR.mp4"]
+}
